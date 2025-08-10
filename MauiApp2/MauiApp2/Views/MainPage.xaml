@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MauiApp2.ViewModels"
+             xmlns:views="clr-namespace:MauiApp2.Views"
+             x:Class="MauiApp2.MainPage"
+             Title="Simulador de Movimento Browniano">
+
+    <ContentPage.BindingContext>
+        <viewmodels:BrownianMotionViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto, *">
+
+            <Frame Grid.Row="0" BorderColor="LightGray" CornerRadius="10" Padding="15" Margin="20,10">
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Configurações da Simulação" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Preço inicial" VerticalOptions="Center"/>
+                        <Entry Grid.Column="1" Text="{Binding InitialPrice}" 
+                               WidthRequest="120" HorizontalTextAlignment="End"
+                               Keyboard="Numeric"
+                               Placeholder="100,00"/>
+                    </Grid>
+
+                    <Label Text="Volatilidade Média (%)" FontSize="16"/>
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <Slider Grid.Column="0" Value="{Binding Volatility}" Minimum="0.05" Maximum="0.5" />
+                        <Label Grid.Column="1" Text="{Binding Volatility, StringFormat='{0:P0}'}" 
+                               VerticalOptions="Center" WidthRequest="50" HorizontalTextAlignment="End"/>
+                    </Grid>
+
+                    <Label Text="Retorno Médio (%)" FontSize="16"/>
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <Slider Grid.Column="0" Value="{Binding MeanReturn}" Minimum="0.00" Maximum="0.05" />
+                        <Label Grid.Column="1" Text="{Binding MeanReturn, StringFormat='{0:P1}'}" 
+                               VerticalOptions="Center" WidthRequest="50" HorizontalTextAlignment="End"/>
+                    </Grid>
+
+                    <Label Text="Tempo (dias)" FontSize="16"/>
+                    <Entry Text="{Binding TimeDaysText, Mode=TwoWay}"
+                           Placeholder="Ex: 252"
+                           Keyboard="Numeric"/>
+                    <Label Text="{Binding TimeDaysError}" TextColor="Red" FontSize="12" IsVisible="{Binding TimeDaysError, Converter={StaticResource IsNotNullOrEmptyConverter}}"/>
+
+                    <Label Text="Número de Simulações" FontSize="16"/>
+                    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                        <Stepper Grid.Column="0" Value="{Binding NumberOfSimulations}" Minimum="1" Maximum="10" Increment="1"/>
+                        <Label Grid.Column="1" Text="{Binding NumberOfSimulations}" VerticalOptions="Center" WidthRequest="50" HorizontalTextAlignment="End"/>
+                    </Grid>
+
+                    <Label Text="Cor da Linha" FontSize="16"/>
+                    <Picker Title="Escolha a cor" 
+                            ItemsSource="{Binding ColorOptions}"
+                            SelectedItem="{Binding SelectedColor}"
+                            ItemDisplayBinding="{Binding Name}">
+                    </Picker>
+
+                    <Button Text="Gerar simulação" 
+                            Command="{Binding RunSimulationCommand}"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="#512BD4"
+                            TextColor="White"
+                            Padding="30,10"
+                            Margin="0,20"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Grid.Row="1" BorderColor="LightGray" CornerRadius="10" Padding="15" Margin="20,10">
+                <VerticalStackLayout>
+                    <Label Text="Resultados da Simulação" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <GraphicsView HeightRequest="300" Drawable="{Binding Drawable}">
+                        <GraphicsView.Background>
+                            <SolidColorBrush Color="WhiteSmoke"/>
+                        </GraphicsView.Background>
+                    </GraphicsView>
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </ScrollView>
+</ContentPage>
